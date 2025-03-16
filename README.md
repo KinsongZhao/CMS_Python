@@ -17,25 +17,26 @@
 - Windows/Linux/MacOS
 
 ## 目录结构
-mirror_cms/
-├─ openapi_server/             # 主程序目录
-│  ├─ __init__.py
-│  ├─ controllers/             # 控制器
-│  │  ├─ __init__.py
-│  │  └─ default_controller.py
-│  ├─ models/                  # 数据模型
-│  │  ├─ __init__.py
-│  │  └─ base_model.py
-│  ├─ openapi/                 # API 规范文件
-│  │  └─ openapi.yaml
-│  └─ database/                # 数据库文件
-│     └─ cms.db
-├─ tests/                      # 测试用例
-│  ├─ __init__.py
-│  └─ test_api.py
-├─ requirements.txt            # 依赖清单
-├─ README.md                   # 项目说明
-└─ .gitignore                  # Git 忽略文件
+
+- mirror_cms/
+  - openapi_server/            # 主程序目录
+    - __init__.py
+    - controllers/             # 控制器
+      - __init__.py
+      - default_controller.py
+    - models/                  # 数据模型
+      - __init__.py
+      - base_model.py
+    - openapi/                # API 规范文件
+      - openapi.yaml
+    - database/               # 数据库文件
+      - cms.db
+  - tests/                    # 测试用例
+    - __init__.py
+    - test_api.py
+  - requirements.txt          # 依赖清单
+  - README.md                 # 项目说明
+  - .gitignore               # Git 忽略文件
 
 ## 快速开始
 
