@@ -59,7 +59,7 @@ MYSQL_CONFIG = {
     'port': 3306,
     'user': 'your_username',
     'password': 'your_password',
-    'database': 'cms'
+    'database': 'mirror_cms'
 }
  ```
 
