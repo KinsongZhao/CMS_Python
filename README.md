@@ -42,9 +42,7 @@ mirror_cms/
 │   └── test_api.py
 │
 ├── requirements.txt        # 依赖清单
-│
 ├── README.md              # 项目说明
-│
 └── .gitignore             # Git 忽略文件
 
 ## 快速开始
