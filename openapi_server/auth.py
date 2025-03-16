@@ -40,24 +40,25 @@ def verify_token(token):
     except jwt.InvalidTokenError:
         return None
 
+from flask_bcrypt import Bcrypt
+from .database import User, db
+import jwt
+import datetime
+
+bcrypt = Bcrypt()
+JWT_SECRET = 'your-secret-key'
+
 def install_admin(username, password):
-    if User.query.first() is not None:
-        return False, '系统已安装'
+    if User.query.first():
+        return False, "系统已安装"
     
-    if len(username) > current_app.config['MAX_USERNAME_LENGTH']:
-        return False, '用户名长度超过限制'
-    
-    if len(password) > current_app.config['MAX_PASSWORD_LENGTH']:
-        return False, '密码长度超过限制'
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    user = User(username=username, password=hashed_password)
     
     try:
-        admin = User(
-            username=username,
-            password=hash_password(password)
-        )
-        db.session.add(admin)
+        db.session.add(user)
         db.session.commit()
-        return True, '管理员创建成功'
+        return True, "安装成功"
     except Exception as e:
         db.session.rollback()
         return False, str(e)
@@ -65,10 +66,14 @@ def install_admin(username, password):
 def login(username, password):
     user = User.query.filter_by(username=username).first()
     if not user:
-        return None, '用户不存在'
+        return None, "用户不存在"
     
-    if not check_password(user.password, password):
-        return None, '密码错误'
+    if not bcrypt.check_password_hash(user.password, password):
+        return None, "密码错误"
     
-    token = generate_token(user.user_id)
-    return token, '登录成功'
+    token = jwt.encode({
+        'user_id': user.user_id,
+        'exp': datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+    }, JWT_SECRET, algorithm='HS256')
+    
+    return token, "登录成功"

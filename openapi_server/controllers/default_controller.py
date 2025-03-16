@@ -3,8 +3,12 @@ from ..auth import install_admin, login
 from ..database import db, User, Category, Article, Setting
 from ..util import require_auth, sanitize_input
 import bleach
+from flask_bcrypt import Bcrypt
+import os
 
 bp = Blueprint('default', __name__)
+
+bcrypt = Bcrypt()
 
 
 @bp.route('/user/install', methods=['POST'])
@@ -249,3 +253,39 @@ def system_update_post(key, value):  # noqa: E501
     :rtype: object
     """
     return 'do some magic!'
+
+
+def install():
+    """系统安装"""
+    if User.query.first():
+        return {"message": "系统已安装"}, 403
+    
+    data = request.get_json()
+    username = data.get('username')
+    password = data.get('password')
+    
+    if not username or not password:
+        return {"message": "参数错误"}, 400
+    
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    user = User(username=username, password=hashed_password)
+    
+    db.session.add(user)
+    db.session.commit()
+    
+    return {"message": "安装成功"}, 200
+
+def article_add_post():
+    """新增文章"""
+    data = request.get_json()
+    name = data.get('name')
+    content = data.get('content')
+    
+    if not name or not content:
+        return {"message": "参数错误"}, 400
+    
+    article = Article(name=name, content=content)
+    db.session.add(article)
+    db.session.commit()
+    
+    return {"message": "添加成功", "article_id": article.article_id}, 200

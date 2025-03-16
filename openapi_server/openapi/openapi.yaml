@@ -1,514 +1,411 @@
-openapi: 3.0.1
+openapi: 3.0.0
 info:
   title: 镜中CMS
   version: 1.0.0
 servers:
-- url: /
+  - url: /
 paths:
-  /article/add:
+  /user/install:
     post:
-      deprecated: false
-      operationId: article_add_post
-      parameters: []
+      summary: 系统安装
+      operationId: openapi_server.controllers.default_controller.install
       requestBody:
-        $ref: '#/components/requestBodies/inline_object'
+        required: true
         content:
           application/json:
             schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: 安装成功
+        '403':
+          description: 已安装过
+  /article/add:
+    post:
+      summary: 新增文章
+      operationId: openapi_server.controllers.default_controller.article_add_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleContent'
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  article_id:
+                    type: integer
+
+  /article/content:
+    get:
+      summary: 获取文章内容
+      operationId: openapi_server.controllers.default_controller.article_content_get
+      parameters:
+        - name: article_id
+          in: query
+          description: 文章ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  article_id:
+                    type: integer
+                  name:
+                    type: string
+                  content:
+                    type: string
+                  category_id:
+                    type: integer
+
+  /article/del:
+    post:
+      summary: 删除文章
+      operationId: openapi_server.controllers.default_controller.article_del_post
+      parameters:
+        - name: article_id
+          in: query
+          description: 文章ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /article/divide:
+    post:
+      summary: 划分文章到栏目
+      operationId: openapi_server.controllers.default_controller.article_divide_post
+      parameters:
+        - name: article_id
+          in: query
+          description: 文章ID
+          required: true
+          schema:
+            type: integer
+        - name: category_id
+          in: query
+          description: 栏目ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /article/list:
+    get:
+      summary: 获取栏目内文章列表
+      operationId: openapi_server.controllers.default_controller.article_list_get
+      parameters:
+        - name: category_id
+          in: query
+          description: 栏目ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  articles:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Article'
+
+  /category/add:
+    post:
+      summary: 新增栏目
+      operationId: openapi_server.controllers.default_controller.category_add_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
               properties:
                 name:
                   type: string
-                content:
-                  type: string
               required:
-              - content
-              - name
-              type: object
-              x-apifox-orders:
-              - 01JPBVV7C632SQZ5Z9Y8K0EHEK
-              x-apifox-refs:
-                "01JPBVV7C632SQZ5Z9Y8K0EHEK":
-                  $ref: '#/components/schemas/ArticleContent'
-              x-apifox-ignore-properties:
-              - name
-              - content
+                - name
       responses:
-        "200":
-          x-apifox-name: 成功
-      security: []
-      summary: 新增文章
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271869305-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
-  /article/content:
-    get:
-      deprecated: false
-      operationId: article_content_get
-      parameters:
-      - description: ID 编号
-        explode: true
-        in: query
-        name: article_id
-        required: false
-        schema:
-          type: integer
-        style: form
-      responses:
-        "200":
-          x-apifox-name: 成功
-      security: []
-      summary: 获取文章内容
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271867530-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
-  /article/del:
-    post:
-      deprecated: false
-      operationId: article_del_post
-      parameters:
-      - description: ID 编号
-        explode: true
-        in: query
-        name: article_id
-        required: false
-        schema:
-          type: integer
-        style: form
-      responses:
-        "200":
-          x-apifox-name: 成功
-      security: []
-      summary: 删除文章
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271869680-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
-  /article/divide:
-    post:
-      deprecated: false
-      operationId: article_divide_post
-      parameters:
-      - description: ID 编号
-        explode: true
-        in: query
-        name: article_id
-        required: false
-        schema:
-          type: integer
-        style: form
-      - description: 分组
-        explode: true
-        in: query
-        name: category_id
-        required: false
-        schema:
-          type: integer
-        style: form
-      responses:
-        "200":
-          x-apifox-name: 成功
-      security: []
-      summary: 划分文章到栏目
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271870082-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
-  /article/list:
-    get:
-      deprecated: false
-      operationId: article_list_get
-      parameters:
-      - description: 分组
-        explode: true
-        in: query
-        name: category_id
-        required: false
-        schema:
-          type: integer
-        style: form
-      responses:
-        "200":
-          x-apifox-name: 成功
-      security: []
-      summary: 获取栏目内文章列表
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271866747-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
-  /category/add:
-    post:
-      deprecated: false
-      operationId: category_add_post
-      parameters:
-      - description: 分组
-        explode: true
-        in: query
-        name: category
-        required: false
-        schema:
-          type: string
-        style: form
-      responses:
-        "200":
-          x-apifox-name: 成功
-      security: []
-      summary: 新增栏目
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271869063-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
   /category/del:
     post:
-      deprecated: false
-      operationId: category_del_post
-      parameters:
-      - description: 分组
-        explode: true
-        in: query
-        name: category_id
-        required: false
-        schema:
-          type: integer
-        style: form
-      responses:
-        "200":
-          x-apifox-name: 成功
-      security: []
       summary: 删除栏目
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271869211-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
+      operationId: openapi_server.controllers.default_controller.category_del_post
+      parameters:
+        - name: category_id
+          in: query
+          description: 栏目ID
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
   /category/list:
     get:
-      deprecated: false
-      operationId: category_list_get
-      parameters: []
-      responses:
-        "200":
-          x-apifox-name: 成功
-      security: []
       summary: 获取栏目列表
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271866346-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
-  /file/download:
-    post:
-      deprecated: false
-      operationId: file_download_post
-      parameters: []
-      requestBody:
-        content:
-          multipart/form-data:
-            schema:
-              properties: {}
-              type: object
+      operationId: openapi_server.controllers.default_controller.category_list_get
       responses:
-        "200":
+        '200':
+          description: 成功
           content:
             application/json:
               schema:
-                properties: {}
                 type: object
-                x-apifox-ignore-properties: []
-                x-apifox-orders: []
-          x-apifox-name: 成功
-      security: []
-      summary: 文件下载
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271870050-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
+                properties:
+                  categories:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Category'
+
   /file/upload:
     post:
-      deprecated: false
-      operationId: file_upload_post
-      parameters: []
+      summary: 文件上传
+      operationId: openapi_server.controllers.default_controller.file_upload_post
       requestBody:
-        $ref: '#/components/requestBodies/inline_object_1'
+        required: true
         content:
           multipart/form-data:
             schema:
+              type: object
               properties:
                 file:
-                  format: binary
                   type: string
-              type: object
+                  format: binary
       responses:
-        "200":
+        '200':
+          description: 成功
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_1'
-          x-apifox-name: 成功
-      security: []
-      summary: 文件上传
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271870023-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
+                type: object
+                properties:
+                  url:
+                    type: string
+
+  /file/download:
+    post:
+      summary: 文件下载
+      operationId: openapi_server.controllers.default_controller.file_download_post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                url:
+                  type: string
+      responses:
+        '200':
+          description: 成功
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+
   /system/add:
     post:
-      deprecated: false
-      operationId: system_add_post
-      parameters:
-      - explode: true
-        in: query
-        name: key
+      summary: 新增系统字段
+      operationId: openapi_server.controllers.default_controller.system_add_post
+      requestBody:
         required: true
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: value
-        required: true
-        schema:
-          type: string
-        style: form
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Setting'
       responses:
-        "200":
+        '200':
+          description: 成功
           content:
             application/json:
               schema:
-                properties: {}
                 type: object
-                x-apifox-ignore-properties: []
-                x-apifox-orders: []
-          x-apifox-name: 成功
-      security: []
-      summary: 新增系统字段
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271868767-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
+                properties:
+                  message:
+                    type: string
+
   /system/del:
     post:
-      deprecated: false
-      operationId: system_del_post
+      summary: 删除系统字段
+      operationId: openapi_server.controllers.default_controller.system_del_post
       parameters:
-      - explode: true
-        in: query
-        name: key
-        required: true
-        schema:
-          type: string
-        style: form
+        - name: key
+          in: query
+          description: 字段名
+          required: true
+          schema:
+            type: string
       responses:
-        "200":
+        '200':
+          description: 成功
           content:
             application/json:
               schema:
-                properties: {}
                 type: object
-                x-apifox-ignore-properties: []
-                x-apifox-orders: []
-          x-apifox-name: 成功
-      security: []
-      summary: 删除系统字段
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271868770-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
+                properties:
+                  message:
+                    type: string
+
   /system/list:
     get:
-      deprecated: false
-      operationId: system_list_get
-      parameters: []
+      summary: 获取系统字段
+      operationId: openapi_server.controllers.default_controller.system_list_get
       responses:
-        "200":
+        '200':
+          description: 成功
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200'
-          x-apifox-name: 成功
-      security: []
-      summary: 获取系统字段
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271867831-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
+                type: object
+                properties:
+                  settings:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Setting'
+
   /system/update:
     post:
-      deprecated: false
-      operationId: system_update_post
-      parameters:
-      - explode: true
-        in: query
-        name: key
+      summary: 修改系统字段
+      operationId: openapi_server.controllers.default_controller.system_update_post
+      requestBody:
         required: true
-        schema:
-          type: string
-        style: form
-      - explode: true
-        in: query
-        name: value
-        required: true
-        schema:
-          type: string
-        style: form
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                key:
+                  type: string
+                value:
+                  type: string
+              required:
+                - key
+                - value
       responses:
-        "200":
+        '200':
+          description: 成功
           content:
             application/json:
               schema:
-                properties: {}
                 type: object
-                x-apifox-ignore-properties: []
-                x-apifox-orders: []
-          x-apifox-name: 成功
-      security: []
-      summary: 修改系统字段
-      tags: []
-      x-apifox-folder: ""
-      x-apifox-status: developing
-      x-run-in-apifox: https://apifox.com/web/project/5412422/apis/api-271868895-run
-      x-openapi-router-controller: openapi_server.controllers.default_controller
+                properties:
+                  message:
+                    type: string
+                  updated:
+                    type: boolean
+
+# 移除 requestBodies 和不必要的 schemas
 components:
-  requestBodies:
-    inline_object_1:
-      content:
-        multipart/form-data:
-          schema:
-            $ref: '#/components/schemas/inline_object_1'
-    inline_object:
-      content:
-        application/json:
-          schema:
-            $ref: '#/components/schemas/inline_object'
   schemas:
     Category:
+      type: object
       properties:
         category_id:
-          description: ID 编号
           type: integer
+          description: ID 编号
         name:
-          description: 名称
           type: string
+          description: 名称
       required:
-      - category_id
-      - name
-      type: object
-      x-apifox-orders:
-      - category_id
-      - name
-      x-apifox-ignore-properties: []
-      x-apifox-folder: ""
+        - category_id
+        - name
+
     Article:
+      type: object
       properties:
         article_id:
+          type: integer
           description: ID 编号
-          type: integer
         name:
-          description: 名称
           type: string
+          description: 名称
         category_id:
-          description: 分组
           type: integer
+          description: 分组
       required:
-      - article_id
-      - category_id
-      - name
+        - article_id
+        - name
+        - category_id
+
+    ArticleContent:
       type: object
-      x-apifox-orders:
-      - article_id
-      - name
-      - category_id
-      x-apifox-ignore-properties: []
-      x-apifox-folder: ""
+      properties:
+        name:
+          type: string
+        content:
+          type: string
+      required:
+        - name
+        - content
+
     Setting:
-      example:
-        value: value
-        key: key
+      type: object
       properties:
         key:
           type: string
         value:
           type: string
       required:
-      - key
-      - value
-      type: object
-      x-apifox-orders:
-      - key
-      - value
-      x-apifox-ignore-properties: []
-      x-apifox-folder: ""
-    ArticleContent:
-      properties:
-        name:
-          type: string
-        content:
-          type: string
-      required:
-      - content
-      - name
-      type: object
-      x-apifox-orders:
-      - name
-      - content
-      x-apifox-ignore-properties: []
-      x-apifox-folder: ""
-    inline_response_200:
-      example:
-        settings:
-        - value: value
-          key: key
-        - value: value
-          key: key
-      properties:
-        settings:
-          items:
-            $ref: '#/components/schemas/Setting'
-          type: array
-      required:
-      - settings
-    inline_object:
-      properties:
-        name:
-          type: string
-        content:
-          type: string
-      required:
-      - content
-      - name
-      type: object
-      x-apifox-orders:
-      - 01JPBVV7C632SQZ5Z9Y8K0EHEK
-      x-apifox-refs:
-        "01JPBVV7C632SQZ5Z9Y8K0EHEK":
-          $ref: '#/components/schemas/ArticleContent'
-      x-apifox-ignore-properties:
-      - name
-      - content
-    inline_object_1:
-      properties:
-        file:
-          format: binary
-          type: string
-      type: object
-    inline_response_200_1:
-      example:
-        url: url
-      properties:
-        url:
-          type: string
-      required:
-      - url
-  securitySchemes: {}
+        - key
+        - value
+
+# 移除不必要的组件定义

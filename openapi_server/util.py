@@ -3,6 +3,34 @@ import datetime
 import six
 import typing
 from openapi_server import typing_utils
+from functools import wraps
+from flask import request, jsonify
+import jwt
+import bleach
+
+JWT_SECRET = 'your-secret-key'
+
+def require_auth(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'message': '未提供认证令牌'}), 401
+        
+        try:
+            jwt.decode(token, JWT_SECRET, algorithms=['HS256'])
+        except jwt.ExpiredSignatureError:
+            return jsonify({'message': '令牌已过期'}), 401
+        except jwt.InvalidTokenError:
+            return jsonify({'message': '无效的令牌'}), 401
+            
+        return f(*args, **kwargs)
+    return decorated
+
+def sanitize_input(text):
+    if text:
+        return bleach.clean(text)
+    return text
 
 
 def _deserialize(data, klass):

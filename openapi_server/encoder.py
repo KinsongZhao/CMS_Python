@@ -1,20 +1,10 @@
-from connexion.apps.flask_app import FlaskJSONEncoder
-import six
+from flask.json.provider import JSONProvider
+import datetime
 
-from openapi_server.models.base_model_ import Model
-
-
-class JSONEncoder(FlaskJSONEncoder):
-    include_nulls = False
-
+class JSONEncoder(JSONProvider):
     def default(self, o):
-        if isinstance(o, Model):
-            dikt = {}
-            for attr, _ in six.iteritems(o.openapi_types):
-                value = getattr(o, attr)
-                if value is None and not self.include_nulls:
-                    continue
-                attr = o.attribute_map[attr]
-                dikt[attr] = value
-            return dikt
-        return FlaskJSONEncoder.default(self, o)
+        if isinstance(o, datetime.date):
+            return o.isoformat()
+        elif isinstance(o, datetime.datetime):
+            return o.isoformat()
+        return super().default(o)
