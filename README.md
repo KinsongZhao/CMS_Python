@@ -6,14 +6,14 @@
 ## 技术栈
 - Python 3.8+
 - Flask + Connexion
-- SQLite 数据库
+- MySQL 5.7
 - OpenAPI 3.0 规范
 - Swagger UI
 
 ## 环境要求
 - Python 3.8 或更高版本
 - pip 包管理器
-- SQLite 3.x
+- MySQL 5.7
 - Windows/Linux/MacOS
 
 ## 目录结构
@@ -45,7 +45,24 @@
 pip install -r requirements.txt
 ```
 ### 2. 配置数据库
-默认使用 SQLite 数据库，数据库文件位于 openapi_server/database/cms.db 。首次运行时会自动创建数据库。
+项目使用 MySQL 5.7 数据库，请确保：
+1. MySQL 5.7 已正确安装并运行
+2. 创建数据库：
+```bash
+mysql -u root -p
+CREATE DATABASE mirror_cms CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+3. 配置数据库连接信息（位于 config.py）：
+```python
+MYSQL_CONFIG = {
+    'host': 'localhost',
+    'port': 3306,
+    'user': 'your_username',
+    'password': 'your_password',
+    'database': 'cms'
+}
+ ```
+
 
 ### 3. 运行服务器
 ```bash
@@ -80,7 +97,7 @@ python -m openapi_server
 2. 在 controllers 目录下实现对应的处理函数
 3. 在 models 目录下添加需要的数据模型
 ### 数据库操作
-- 使用 SQLite 数据库
+- 使用  MySQL 5.7 数据库
 - 数据库文件位置： openapi_server/database/cms.db
 - 表结构在首次运行时自动创建
 
