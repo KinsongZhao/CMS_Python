@@ -17,39 +17,101 @@
 - Windows/Linux/MacOS
 
 ## 目录结构
+python/
+├── openapi_server/        # 主程序目录
+│   ├── controllers/       # 控制器
+│   ├── models/           # 数据模型
+│   ├── openapi/          # API 规范文件
+│   └── database/         # 数据库文件
+├── tests/                # 测试用例
+├── requirements.txt      # 依赖清单
+└── README.md            # 项目说明
 
-## 安装依赖
+## 快速开始
+
+### 1. 安装依赖
 ```bash
 pip install -r requirements.txt
-python3 -m openapi_server
+
+### 2. 配置数据库
+默认使用 SQLite 数据库，数据库文件位于 openapi_server/database/cms.db 。首次运行时会自动创建数据库。
+
+3. 运行服务器
+```bash
+python -m openapi_server
+
+服务器默认运行在：
+
+- 地址： http://127.0.0.1:12345
+- Swagger UI： http://127.0.0.1:12345/ui/
+- API 文档： http://127.0.0.1:12345/openapi.json
+
+## 主要功能
+### 系统管理
+- 系统初始化
+- 管理员账户设置
+- 系统参数配置
+### 内容管理
+- 文章的增删改查
+- 文章分类管理
+- 栏目管理
+- 文件上传下载
+## API 文档
+所有 API 接口都在 Swagger UI 中有详细说明，包括：
+
+- 接口说明
+- 请求参数
+- 响应格式
+- 示例数据
+## 开发指南
+### 添加新接口
+1. 在 openapi/openapi.yaml 中定义接口规范
+2. 在 controllers 目录下实现对应的处理函数
+3. 在 models 目录下添加需要的数据模型
+### 数据库操作
+- 使用 SQLite 数据库
+- 数据库文件位置： openapi_server/database/cms.db
+- 表结构在首次运行时自动创建
+
+
+## Docker 部署
+### 构建镜像
+```bash
+docker build -t mirror_cms .
+ ```
+
+### 运行容器
+```bash
+docker run -d -p 12345:12345 -v /data/cms:/app/data mirror_cms
+ ```
 ```
 
-and open your browser to here:
+### 容器配置
+- 端口映射：12345
+- 数据持久化：/data/cms
+## 常见问题
+### 端口被占用
+如遇端口冲突，可以修改 __main__.py 中的端口号：
 
-```
-http://localhost:8080/ui/
-```
-
-Your OpenAPI definition lives here:
-
-```
-http://localhost:8080/openapi.json
-```
-
-To launch the integration tests, use tox:
-```
-sudo pip install tox
-tox
+```python
+app.run(host='127.0.0.1', port=新端口号)
+ ```
 ```
 
-## Running with Docker
-
-To run the server on a Docker container, please execute the following from the root directory:
+### 数据库访问错误
+确保数据库目录具有读写权限：
 
 ```bash
-# building the image
-docker build -t openapi_server .
-
-# starting up a container
-docker run -p 8080:8080 openapi_server
+chmod 755 openapi_server/database
+chmod 644 openapi_server/database/cms.db
+ ```
 ```
+
+## 安全说明
+- 建议在生产环境中修改默认端口
+- 及时更新管理员密码
+- 定期备份数据库文件
+- 限制上传文件类型和大小
+## 许可证
+MIT License
+
