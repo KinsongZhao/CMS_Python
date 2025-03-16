@@ -17,18 +17,10 @@
 - Windows/Linux/MacOS
 
 ## 目录结构
-python/
-├── openapi_server/        # 主程序目录
-│   ├── controllers/       # 控制器
-│   ├── models/           # 数据模型
-│   ├── openapi/          # API 规范文件
-│   └── database/         # 数据库文件
-├── tests/                # 测试用例
-├── requirements.txt      # 依赖清单
-└── README.md            # 项目说明
 mirror_cms/
 │
 ├── openapi_server/           # 主程序目录
+│   │
 │   ├── controllers/         # 控制器
 │   │   ├── init .py
 │   │   └── default_controller.py
@@ -50,7 +42,9 @@ mirror_cms/
 │   └── test_api.py
 │
 ├── requirements.txt        # 依赖清单
+│
 ├── README.md              # 项目说明
+│
 └── .gitignore             # Git 忽略文件
 
 ## 快速开始
