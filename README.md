@@ -32,14 +32,14 @@ python/
 ### 1. 安装依赖
 ```bash
 pip install -r requirements.txt
-
+```
 ### 2. 配置数据库
 默认使用 SQLite 数据库，数据库文件位于 openapi_server/database/cms.db 。首次运行时会自动创建数据库。
 
-3. 运行服务器
+### 3. 运行服务器
 ```bash
 python -m openapi_server
-
+```
 服务器默认运行在：
 
 - 地址： http://127.0.0.1:12345
@@ -84,7 +84,7 @@ docker build -t mirror_cms .
 ```bash
 docker run -d -p 12345:12345 -v /data/cms:/app/data mirror_cms
  ```
-```
+
 
 ### 容器配置
 - 端口映射：12345
@@ -96,7 +96,7 @@ docker run -d -p 12345:12345 -v /data/cms:/app/data mirror_cms
 ```python
 app.run(host='127.0.0.1', port=新端口号)
  ```
-```
+
 
 ### 数据库访问错误
 确保数据库目录具有读写权限：
@@ -105,7 +105,7 @@ app.run(host='127.0.0.1', port=新端口号)
 chmod 755 openapi_server/database
 chmod 644 openapi_server/database/cms.db
  ```
-```
+
 
 ## 安全说明
 - 建议在生产环境中修改默认端口
